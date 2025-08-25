@@ -1,0 +1,40 @@
+{% extends 'store/base.html' %}
+{% load widget_tweaks %}
+{% block title %}
+  {% if form.instance.pk %}
+    Edit Category - Shopilo
+  {% else %}
+    Add Category - Shopilo
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto bg-white shadow rounded-lg p-6">
+  <h1 class="text-3xl font-bold mb-6 text-[#DAA520]">
+    {% if form.instance.pk %}
+      Edit Category
+    {% else %}
+      Add New Category
+    {% endif %}
+  </h1>
+
+  <form method="post" enctype="multipart/form-data" class="space-y-5">
+    {% csrf_token %}
+    {% for field in form %}
+      <div>
+        <label class="block mb-1 text-sm font-medium text-black">{{ field.label }}</label>
+        {{ field|add_class:"w-full bg-white border border-gray-300 px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-[#DAA520]" }}
+        {% if field.errors %}
+          <p class="text-sm text-red-600 mt-1">{{ field.errors|striptags }}</p>
+        {% endif %}
+      </div>
+    {% endfor %}
+
+    <button type="submit"
+            class="bg-[#DAA520] hover:bg-yellow-600 text-white px-6 py-2 rounded transition">
+      Save
+    </button>
+    <a href="{% url 'admin_panel' %}" class="ml-4 text-gray-600 hover:text-[#DAA520] hover:underline transition">Cancel</a>
+  </form>
+</div>
+{% endblock %}

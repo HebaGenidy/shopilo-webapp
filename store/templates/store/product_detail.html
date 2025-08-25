@@ -1,0 +1,100 @@
+{% extends 'store/base.html' %}
+{% load static %}
+{% block content %}
+
+<section class="px-6 md:px-12 py-16 bg-white text-gray-800">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-6xl mx-auto items-start">
+
+    <!-- Left: Product Info -->
+    <div>
+      <!-- Product Name -->
+      <h1 class="text-3xl md:text-5xl font-extrabold text-[#DAA520] mb-4">{{ product.name }}</h1>
+
+      <!-- Price -->
+      <div class="flex items-center mb-4">
+        <span class="text-2xl md:text-3xl text-gray-800 font-bold mr-4">${{ product.price }}</span>
+      </div>
+
+      <!-- Category -->
+      {% if product.category %}
+        <p class="text-sm text-[#DAA520] font-medium mb-2">
+          Category: {{ product.category.name }}
+        </p>
+      {% endif %}
+
+      <!-- Description -->
+      <p class="text-gray-700 mb-6 leading-relaxed">
+        {{ product.description }}
+      </p>
+
+      <!-- Stock -->
+      {% if product.stock > 0 %}
+        <p class="text-green-600 font-medium mb-6">✓ In stock: {{ product.stock }} pieces available</p>
+      {% else %}
+        <p class="text-red-600 font-medium mb-6">Out of Stock</p>
+      {% endif %}
+
+      <!-- Add to Bag Button -->
+      {% if product.stock > 0 %}
+        {% if user.is_authenticated %}
+          <button onclick="toggleModal()" class="w-full py-3 bg-[#DAA520] hover:bg-yellow-600 text-white text-lg font-semibold rounded-md transition flex items-center justify-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-1.5 7H19a1 1 0 001-1v-1M5.5 20h13" />
+            </svg>
+            Add to Bag
+          </button>
+        {% else %}
+          <a href="{% url 'login' %}?next={{ request.path }}" class="block w-full text-center py-3 bg-[#DAA520] hover:bg-yellow-600 text-white text-lg font-semibold rounded-md transition">
+             Add to Bag
+          </a>
+        {% endif %}
+      {% endif %}
+    </div>
+
+    <!-- Right: Product Image -->
+    <div class="rounded-lg overflow-hidden transform hover:scale-[1.03] active:scale-95 transition duration-300   ">
+      <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-72 h-85 object-contain mx-auto" />
+    </div>
+
+  </div>
+</section>
+
+<!-- Purchase Modal -->
+<div id="purchaseModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
+  <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md relative border border-gray-200">
+    <!-- Close Button -->
+    <button onclick="toggleModal()" class="absolute top-2 right-2 text-gray-600 hover:text-black text-2xl font-bold">✕</button>
+
+    <h2 class="text-2xl font-bold mb-4 text-[#DAA520]">Buy {{ product.name }}</h2>
+
+    <form method="post" action="{% url 'buy_product' product.id %}" class="space-y-4">
+      {% csrf_token %}
+      <div>
+        <label class="block mb-1 font-medium">Quantity:</label>
+        <input type="number" name="quantity" min="1" max="{{ product.stock }}" required class="w-full border border-gray-300 rounded-md px-3 py-2">
+      </div>
+      <div>
+        <label class="block mb-1 font-medium">Full Name:</label>
+        <input type="text" name="full_name" required class="w-full border border-gray-300 rounded-md px-3 py-2">
+      </div>
+      <div>
+        <label class="block mb-1 font-medium">Address:</label>
+        <textarea name="address" required class="w-full border border-gray-300 rounded-md px-3 py-2"></textarea>
+      </div>
+      <button type="submit" class="w-full bg-[#DAA520] hover:bg-yellow-600 text-white py-2 rounded-md font-semibold">
+        Confirm Purchase
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- Modal Toggle Script -->
+<script>
+  function toggleModal() {
+    const modal = document.getElementById("purchaseModal");
+    modal.classList.toggle("hidden");
+  }
+</script>
+
+{% endblock %}

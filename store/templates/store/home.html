@@ -1,0 +1,239 @@
+{% extends 'store/base.html' %}
+{% load static %}
+{% block content %}
+
+<!-- Custom Styles -->
+<style>
+  html {
+    scroll-behavior: smooth;
+    overflow-x: hidden; 
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  #hero-image {
+    transition: opacity 1s ease-in-out;
+  }
+
+  .opacity-0 {
+    opacity: 0;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Gold Theme */
+  .gold {
+    color: #DAA520 !important;
+  }
+  .bg-gold {
+    background-color: #DAA520 !important;
+  }
+  .hover-gold:hover {
+    color: #DAA520 !important;
+  }
+  .hover-bg-gold:hover {
+    background-color: #DAA520 !important;
+  }
+</style>
+
+<!-- AOS CSS -->
+<link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+
+<!-- Hero Section -->
+<section id="hero-section" 
+  class="relative mb-16 min-h-[90vh] w-full overflow-hidden rounded-xl flex items-center justify-center"
+  data-aos="fade-up"
+  data-aos-duration="1200"
+  data-aos-easing="ease-in-out">
+
+  <!-- Background Image -->
+  <img id="hero-image"
+       src="{% static 'store/s1.jpg' %}"
+       alt="Hero"
+       class="absolute inset-0 w-full h-full object-cover z-0 transition-opacity duration-1000" />
+
+  <!-- Gradient Overlay -->
+  <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-black/40 to-black/60 z-10"></div>
+
+  <!-- Text Content -->
+  <div class="relative z-20 text-center px-4 max-w-3xl"
+       data-aos="fade-up"
+       data-aos-duration="1000"
+       data-aos-delay="200">
+    <h1 class="text-5xl md:text-6xl font-extrabold text-white mb-6 drop-shadow-lg">
+      Unleash Your <span class="gold">Style</span>
+    </h1>
+    <p class="text-lg md:text-xl text-gray-200 mb-8 font-medium drop-shadow-md">
+      Discover exclusive products that match your lifestyle.
+    </p>
+    <a href="#products"
+      class="bg-gold hover:bg-yellow-600 text-white py-3 px-8 rounded-full font-semibold shadow-lg transition transform hover:scale-105 duration-300">
+      Shop Now
+    </a>
+  </div>
+</section>
+
+<!-- Products Section -->
+<section id="products" class="mb-16 px-6 md:px-12" data-aos="fade-up" data-aos-duration="1000">
+  {% if query %}
+    <h2 class="text-3xl font-bold gold mb-6 text-center">Results for "{{ query }}"</h2>
+  {% else %}
+    <h2 class="text-3xl font-bold gold mb-6 text-center">All Products</h2>
+  {% endif %}
+
+  {% if products %}
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+      {% for product in products %}
+        <a href="{% url 'product_detail' product.pk %}" 
+           class="group block bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition duration-300 border border-gray-200"
+           data-aos="zoom-in" data-aos-duration="900" data-aos-delay="{{ forloop.counter0|add:1 }}50">
+          <div class="w-full h-64 overflow-hidden">
+            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500">
+          </div>
+          <div class="text-center py-4 px-3 bg-white">
+            <h3 class="text-lg font-semibold text-gray-800 group-hover:gold transition">{{ product.name }}</h3>
+            <p class="gold text-md font-bold mt-1">${{ product.price }}</p>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  {% elif not_found %}
+    <p class="text-center text-red-600 text-lg font-semibold mt-10">No products found for "{{ query }}"</p>
+  {% endif %}
+  <div class="text-center mt-10" data-aos="fade-up" data-aos-delay="200">
+    <a href="{% url 'all_products' %}" class="inline-flex items-center gold font-semibold text-lg hover:text-yellow-600 transition duration-300">
+      View All Products
+      <svg class="w-5 h-5 ml-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+      </svg>
+    </a>
+  </div>
+</section>
+
+<!-- Categories Section -->
+<section id="categories" class="px-6 md:px-12 mb-16 relative" data-aos="fade-right" data-aos-duration="1000">
+  <div class="flex items-center justify-between mb-6">
+    <h2 class="text-3xl font-bold gold">Shop by Category</h2>
+  </div>
+
+  <div id="categoryContainer" class="flex overflow-x-auto space-x-6 pb-4 snap-x snap-mandatory scroll-smooth scrollbar-hide">
+    {% for category in categories %}
+      <a href="{% url 'all_product' category.id %}" 
+         class="group block min-w-[220px] sm:min-w-[260px] bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition duration-300 flex-shrink-0 snap-start border border-gray-200 cursor-pointer"
+         data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:1 }}00">
+        {% if category.image %}
+          <div class="w-full h-64 overflow-hidden">
+            <img src="{{ category.image.url }}" alt="{{ category.name }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+          </div>
+        {% else %}
+          <div class="w-full h-64 flex items-center justify-center bg-gray-100 text-gray-400">No Image</div>
+        {% endif %}
+        <div class="text-center py-4 px-3 bg-white">
+          <h3 class="text-lg font-semibold text-gray-800">{{ category.name }}</h3>
+        </div>
+      </a>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- About Section -->
+<section id="about" 
+  class="py-20 bg-gradient-to-br from-yellow-50 via-white to-yellow-50 rounded-3xl shadow-inner w-full overflow-hidden"
+  data-aos="fade-left" data-aos-duration="1200">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center max-w-7xl mx-auto px-6 md:px-12">
+    <div class="space-y-6" data-aos="fade-right" data-aos-delay="200">
+      <h2 class="text-4xl sm:text-5xl font-extrabold gold leading-tight">
+        We're redefining <br class="hidden sm:inline"> the way you shop online
+      </h2>
+      <p class="text-gray-700 text-lg leading-relaxed">
+        <span class="font-semibold gold">Shopilo</span> isn’t just a store, it's a destination.
+      </p>
+      <a href="#contact" class="inline-block mt-4 px-6 py-3 bg-gold hover:bg-yellow-600 text-white font-medium rounded-lg transition">Get in Touch</a>
+    </div>
+    <div class="grid grid-cols-2 gap-6">
+      <div class="w-full h-48" data-aos="zoom-in" data-aos-delay="100"><img src="{% static 'store/s1.jpg' %}" class="w-full h-full object-cover rounded-xl shadow-md"></div>
+      <div class="w-full h-64" data-aos="zoom-in" data-aos-delay="200"><img src="{% static 'store/s2.jpg' %}" class="w-full h-full object-cover rounded-xl shadow-md"></div>
+      <div class="w-full h-64" data-aos="zoom-in" data-aos-delay="300"><img src="{% static 'store/s3.jpg' %}" class="w-full h-full object-cover rounded-xl shadow-md"></div>
+      <div class="w-full h-48" data-aos="zoom-in" data-aos-delay="400"><img src="{% static 'store/s4.jpg' %}" class="w-full h-full object-cover rounded-xl shadow-md"></div>
+    </div>
+  </div>
+</section>
+
+<!-- Contact Section -->
+<section id="contact" class="mt-24 px-6 md:px-12 mb-20" data-aos="fade-up" data-aos-duration="1000">
+  <h2 class="text-3xl font-bold mb-2 text-center text-gray-900">Contact Sales</h2>
+  <p class="text-center text-gray-500 mb-8 font-bold">Have questions? We're here to help.</p>
+
+  <form method="POST" action="{% url 'contact' %}#contact" class="max-w-3xl mx-auto bg-white p-10 rounded-2xl shadow-lg space-y-6">
+    {% csrf_token %}
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <label for="first_name" class="block text-sm font-semibold text-gray-700 mb-1">First Name</label>
+        <input type="text" id="first_name" name="first_name" required class="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#DAA520] transition">
+      </div>
+      <div>
+        <label for="last_name" class="block text-sm font-semibold text-gray-700 mb-1">Last Name</label>
+        <input type="text" id="last_name" name="last_name" required class="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#DAA520] transition">
+      </div>
+    </div>
+    <div>
+      <label for="email" class="block text-sm font-semibold text-gray-700 mb-1">Email Address</label>
+      <input type="email" id="email" name="email" required class="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#DAA520] transition">
+    </div>
+    <div>
+      <label for="message" class="block text-sm font-semibold text-gray-700 mb-1">Your Message</label>
+      <textarea id="message" name="message" rows="5" required class="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#DAA520] transition resize-none"></textarea>
+    </div>
+
+    {% if user.is_authenticated %}
+      <button type="submit" class="w-full py-3 bg-gold text-white text-lg font-semibold rounded-md hover:bg-yellow-600 transition">Let's Talk</button>
+    {% else %}
+      <a href="{% url 'login' %}" class="block w-full text-center py-3 bg-gold text-white text-lg font-semibold rounded-md hover:bg-yellow-600 transition">
+        Contact Us
+      </a>
+    {% endif %}
+  </form>
+</section>
+
+<!-- Scripts -->
+<script>
+  const heroImage = document.getElementById("hero-image");
+  const images = [
+    "{% static 'store/s4.jpg' %}",
+    "{% static 'store/s2.jpg' %}",
+    "{% static 'store/s5.jpg' %}",
+    "{% static 'store/s3.jpg' %}",
+    "{% static 'store/s6.jpg' %}",
+  ];
+  let current = 0;
+  setInterval(() => {
+    current = (current + 1) % images.length;
+    heroImage.classList.add("opacity-0");
+    setTimeout(() => {
+      heroImage.src = images[current];
+      heroImage.classList.remove("opacity-0");
+    }, 500);
+  }, 3000);
+</script>
+
+<!-- AOS JS -->
+<script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+<script>
+  AOS.init({
+    once: false,
+    duration: 1000,
+    easing: 'ease-in-out'
+  });
+</script>
+
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends 'store/base.html' %}
+{% block title %}Search Results{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto px-4 py-8">
+  <h2 class="text-3xl font-bold mb-8 text-center text-yellow-700">
+    Search Results for <span class="text-yellow-500">"{{ query }}"</span>
+  </h2>
+
+  {% if products %}
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+      {% for product in products %}
+        <div class="bg-white border border-gray-200 rounded-lg shadow hover:shadow-lg transition duration-200 overflow-hidden">
+          {% if product.image %}
+            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-48 object-contain">
+          {% endif %}
+          <div class="p-4">
+            <h3 class="text-lg font-semibold text-gray-900">{{ product.name }}</h3>
+            <p class="text-sm text-gray-600 mt-2 mb-4">{{ product.description|truncatechars:100 }}</p>
+            <a href="{% url 'product_detail' product.id %}" 
+               class="inline-block bg-yellow-600 text-white text-sm px-4 py-2 rounded hover:bg-yellow-700 transition">
+              View Details
+            </a>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="text-center text-gray-500 text-lg">No products found.</p>
+  {% endif %}
+</div>
+{% endblock %}

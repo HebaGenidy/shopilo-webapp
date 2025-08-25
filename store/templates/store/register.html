@@ -1,0 +1,90 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Register</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="{% static 'store/shopping.png' %}">
+</head>
+<body class="bg-white h-screen overflow-auto flex items-center justify-center px-4">
+
+  <div class="w-full max-w-md bg-white shadow-lg rounded-xl p-6 md:p-8 border border-gray-200">
+    <!-- Header -->
+    <div class="text-center space-y-1 mb-3">
+      <img src="{% static 'store/shopping.png' %}" class="mx-auto w-16 h-16" alt="Logo">
+      <h1 class="text-3xl font-bold text-[#DAA520]">Shopilo</h1>
+      <p class="text-gray-500 text-base">Create your account to start shopping</p>
+    </div>
+
+    <!-- Register Form -->
+    <form method="POST">
+      {% csrf_token %}
+
+      {% if form.non_field_errors %}
+        <p class="text-red-600 text-sm mb-2">
+          {% for error in form.non_field_errors %}
+            {{ error }}
+          {% endfor %}
+        </p>
+      {% endif %}
+
+      <!-- First Name -->
+      <input type="text" name="first_name" placeholder="First Name" value="{{ form.first_name.value|default:'' }}"
+        class="w-full mb-3 text-base px-4 py-2.5 border rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500">
+      {% if form.first_name.errors %}
+        <p class="text-red-600 text-sm">{{ form.first_name.errors.0 }}</p>
+      {% endif %}
+
+      <!-- Last Name -->
+      <input type="text" name="last_name" placeholder="Last Name" value="{{ form.last_name.value|default:'' }}"
+        class="w-full mb-3 text-base px-4 py-2.5 border rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500">
+      {% if form.last_name.errors %}
+        <p class="text-red-600 text-sm">{{ form.last_name.errors.0 }}</p>
+      {% endif %}
+
+      <!-- Username -->
+      <input type="text" name="username" placeholder="Username" value="{{ form.username.value|default:'' }}"
+        class="w-full mb-3 text-base px-4 py-2.5 border rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500">
+      {% if form.username.errors %}
+        <p class="text-red-600 text-sm">{{ form.username.errors.0 }}</p>
+      {% endif %}
+
+      <!-- Email -->
+      <input type="email" name="email" placeholder="Email" required value="{{ form.email.value|default:'' }}"
+        class="w-full mb-3 text-base px-4 py-2.5 border rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500">
+      {% if form.email.errors %}
+        <p class="text-red-600 text-sm">{{ form.email.errors.0 }}</p>
+      {% endif %}
+
+      <!-- Password -->
+      <input type="password" name="password1" placeholder="Password" required
+        class="w-full mb-3 text-base px-4 py-2.5 border rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500">
+      {% if form.password1.errors %}
+        <p class="text-red-600 text-sm">{{ form.password1.errors.0 }}</p>
+      {% endif %}
+
+      <!-- Confirm Password -->
+      <input type="password" name="password2" placeholder="Confirm Password" required
+        class="w-full mb-3 text-base px-4 py-2.5 border rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500">
+      {% if form.password2.errors %}
+        <p class="text-red-600 text-sm">{{ form.password2.errors.0 }}</p>
+      {% endif %}
+
+      <!-- Submit -->
+      <button type="submit"
+              class="w-full mt-2 py-2.5 text-lg bg-yellow-600 hover:bg-yellow-700 text-white font-semibold rounded-md transition duration-200">
+        Register
+      </button>
+    </form>
+
+    <!-- Login Link -->
+    <div class="text-center text-sm text-gray-600 mt-4">
+      Already have an account?
+      <a href="{% url 'login' %}" class="text-yellow-700 hover:underline font-medium">Login here</a>
+    </div>
+  </div>
+
+</body>
+</html>

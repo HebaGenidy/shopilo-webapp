@@ -1,0 +1,64 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="{% static 'store/shopping.png' %}">
+</head>
+<body class="bg-white h-screen overflow-hidden flex items-center justify-center px-4">
+
+  <div class="w-full max-w-md bg-white shadow-lg rounded-xl p-6 md:p-8 border border-gray-200">
+    
+    <!-- Header -->
+    <div class="text-center space-y-1 mb-4">
+      <img src="{% static 'store/shopping.png' %}" alt="Shopilo Logo" class="mx-auto w-16 h-16">
+      <h1 class="text-3xl font-bold text-[#DAA520]">Shopilo</h1>
+      <p class="text-gray-500 text-base">Welcome back! Please sign in to your account.</p>
+    </div>
+
+    <!-- Login Form -->
+    <form method="POST" action="{% url 'login' %}" class="space-y-4">
+      {% csrf_token %}
+
+      {% if messages %}
+        <div class="text-red-600 text-sm font-medium mb-2">
+          {% for message in messages %}
+            <p>{{ message }}</p>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <div>
+        <input type="text" name="username" placeholder="Username" required
+              class="w-full text-base px-4 py-2.5 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#DAA520]">
+      </div>
+
+      <div>
+        <input type="password" name="password" placeholder="Password" required
+              class="w-full text-base px-4 py-2.5 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#DAA520]">
+      </div>
+
+      <div class="text-right">
+        <a href="{% url 'password_reset' %}" class="text-sm text-[#DAA520] hover:text-yellow-600 font-medium">
+          Forgot password?
+        </a>
+      </div>
+
+      <button type="submit"
+              class="w-full py-2.5 text-lg bg-[#DAA520] hover:bg-yellow-600 text-white font-semibold rounded-md transition duration-200">
+        Sign In
+      </button>
+    </form>
+
+    <!-- Register Link -->
+    <div class="text-center text-sm text-gray-600 mt-4">
+      Don't have an account?
+      <a href="{% url 'register' %}" class="text-[#DAA520] hover:underline font-medium">Register here</a>
+    </div>
+  </div>
+
+</body>
+</html>

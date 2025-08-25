@@ -1,0 +1,45 @@
+{% extends 'store/base.html' %}
+{% load widget_tweaks %}
+{% block title %}
+  {% if form.instance.pk %}
+    Edit Product - Shopilo
+  {% else %}
+    Add Product - Shopilo
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto bg-white shadow-lg rounded-xl p-8 border border-gray-200">
+  <h1 class="text-3xl font-extrabold mb-8 text-yellow-600">
+    {% if form.instance.pk %}
+       Edit Product
+    {% else %}
+       Add New Product
+    {% endif %}
+  </h1>
+
+  <form method="post" enctype="multipart/form-data" class="space-y-6">
+    {% csrf_token %}
+    {% for field in form %}
+      <div>
+        <label class="block mb-2 text-sm font-semibold text-gray-700">{{ field.label }}</label>
+        {{ field|add_class:"w-full bg-yellow-50 border border-yellow-300 px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition" }}
+        {% if field.errors %}
+          <p class="text-sm text-red-600 mt-1">{{ field.errors|striptags }}</p>
+        {% endif %}
+      </div>
+    {% endfor %}
+
+    <div class="flex items-center gap-4">
+      <button type="submit"
+              class="bg-yellow-600 hover:bg-yellow-700 text-white px-6 py-2 rounded-lg shadow transition">
+         Save
+      </button>
+      <a href="{% url 'admin_panel' %}" 
+         class="px-6 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg transition">
+         Cancel
+      </a>
+    </div>
+  </form>
+</div>
+{% endblock %}

@@ -20,8 +20,8 @@ It also includes an admin panel for managing products and categories.
 
 ## 🛠️ Tech Stack
 - **Backend:** Django (Authentication, CRUD, Admin Panel)  
-- **Frontend:** HTML, CSS, TailwindCSS  
-- **Database:** SQLite  
+- **Frontend:** HTML, CSS, TailwindCSS, Css  
+- **Database:** Postgesql  
 
 ---
 
